@@ -21,3 +21,17 @@ export const genres = [
   'Sports',
   'Business',
 ];
+
+export const BookFilterableFields = [
+  'title',
+  'author',
+  'genre',
+  'publicationDate',
+];
+
+export const BookSearchableFields = [
+  'title',
+  'author',
+  'genre',
+  'publicationDate',
+];

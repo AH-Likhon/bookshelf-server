@@ -13,4 +13,6 @@ router.post(
   BookController.insertBookToDB
 );
 
+router.get('/', auth(), BookController.getAllBooksFromDB);
+
 export const BookRoutes = router;

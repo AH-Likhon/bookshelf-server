@@ -18,26 +18,34 @@ const ReviewSchema = new Schema(
   }
 );
 
-const BookSchema = new Schema<IBook>({
-  title: {
-    type: String,
-    required: true,
-    unique: true,
+const BookSchema = new Schema<IBook>(
+  {
+    title: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    author: {
+      type: String,
+      required: true,
+    },
+    genre: {
+      type: String,
+      enum: genres,
+      required: true,
+    },
+    publicationDate: {
+      type: String,
+      required: true,
+    },
+    reviews: [ReviewSchema], // Use the ReviewSchema to define the reviews array
   },
-  author: {
-    type: String,
-    required: true,
-  },
-  genre: {
-    type: String,
-    enum: genres,
-    required: true,
-  },
-  publicationDate: {
-    type: String,
-    required: true,
-  },
-  reviews: [ReviewSchema], // Use the ReviewSchema to define the reviews array
-});
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+    },
+  }
+);
 
 export const Book = model<IBook, BookModel>('Book', BookSchema);
