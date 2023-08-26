@@ -2,16 +2,21 @@ import { Schema, model } from 'mongoose';
 import { BookModel, IBook } from './book.interface'; // Import IBook and IReview interfaces
 import { genres } from './book.constant';
 
-const ReviewSchema = new Schema({
-  rating: {
-    type: Number,
-    required: true,
+const ReviewSchema = new Schema(
+  {
+    rating: {
+      type: Number,
+      required: true,
+    },
+    reviewText: {
+      type: String,
+      required: true,
+    },
   },
-  reviewText: {
-    type: String,
-    required: true,
-  },
-});
+  {
+    _id: false, // Disable automatic creation of _id
+  }
+);
 
 const BookSchema = new Schema<IBook>({
   title: {
