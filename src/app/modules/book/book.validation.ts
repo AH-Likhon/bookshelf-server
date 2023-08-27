@@ -29,4 +29,24 @@ const createBookZodSchema = z.object({
   }),
 });
 
-export const BookValidation = { createBookZodSchema };
+const updateBookZodSchema = z.object({
+  body: z.object({
+    title: z.string().optional(),
+    author: z.string().optional(),
+    genre: z.enum([...genres] as [string, ...string[]]).optional(),
+    publicationDate: z.string().optional(),
+    reviews: z
+      .array(
+        z.object({
+          rating: z
+            .number()
+            .int({ message: 'Rating must be an integer' })
+            .optional(),
+          reviewText: z.string().optional(),
+        })
+      )
+      .optional(),
+  }),
+});
+
+export const BookValidation = { createBookZodSchema, updateBookZodSchema };

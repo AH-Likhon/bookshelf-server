@@ -5,6 +5,7 @@ import config from '../../config';
 import ApiError from '../../errors/ApiError';
 import { jwtHelpers } from '../../helpers/jwtHelpers';
 import { User } from '../modules/user/user.model';
+import { Book } from '../modules/book/book.model';
 
 const auth = () => async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -33,11 +34,25 @@ const auth = () => async (req: Request, res: Response, next: NextFunction) => {
     }
 
     // Check if the logged-in user's ID matches the seller's ID in the request body
-    if (req.body.seller && user._id.toString() !== req.body.seller.toString()) {
+    if (
+      req.method === 'POST' &&
+      req.baseUrl === '/api/v1/books' &&
+      req.body.seller &&
+      user._id.toString() !== req.body.seller.toString()
+    ) {
       throw new ApiError(
         httpStatus.FORBIDDEN,
-        "You're not authorized to perform this action"
+        "You're not authorized to insert a new book"
       );
+    } else if (req.method === 'PATCH' && req.baseUrl === '/api/v1/books') {
+      const bookId = req.params.id;
+      const book = await Book.findOne({ _id: bookId });
+      if (user._id.toString() !== book?.seller.toString()) {
+        throw new ApiError(
+          httpStatus.FORBIDDEN,
+          "You're not authorized to update/delete this book!"
+        );
+      }
     }
 
     next();
