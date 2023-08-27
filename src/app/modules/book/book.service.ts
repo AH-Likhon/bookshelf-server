@@ -79,6 +79,11 @@ const getAllBooks = async (
 
 const getSingleBook = async (id: string): Promise<IBook | null> => {
   const result = await Book.findById(id).populate({ path: 'seller' });
+
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'The book is not found!');
+  }
+
   return result;
 };
 
@@ -89,6 +94,12 @@ const updateBook = async (
   const result = await Book.findOneAndUpdate({ _id: id }, payload, {
     new: true,
   });
+
+  return result;
+};
+
+const deleteBook = async (id: string): Promise<IBook | null> => {
+  const result = await Book.findByIdAndDelete(id);
   return result;
 };
 
@@ -97,4 +108,5 @@ export const BookService = {
   getAllBooks,
   getSingleBook,
   updateBook,
+  deleteBook,
 };

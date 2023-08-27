@@ -22,6 +22,8 @@ router.patch(
   BookController.updateBookFromDB
 );
 
+router.delete('/:id', auth(), BookController.deleteBookFromDB);
+
 router.get('/', auth(), BookController.getAllBooksFromDB);
 
 export const BookRoutes = router;

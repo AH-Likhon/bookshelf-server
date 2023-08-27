@@ -44,14 +44,19 @@ const auth = () => async (req: Request, res: Response, next: NextFunction) => {
         httpStatus.FORBIDDEN,
         "You're not authorized to insert a new book"
       );
-    } else if (req.method === 'PATCH' && req.baseUrl === '/api/v1/books') {
+    } else if (
+      (req.method === 'PATCH' || req.method === 'DELETE') &&
+      req.baseUrl === '/api/v1/books'
+    ) {
       const bookId = req.params.id;
       const book = await Book.findOne({ _id: bookId });
-      if (user._id.toString() !== book?.seller.toString()) {
+      if (book && user._id.toString() !== book.seller.toString()) {
         throw new ApiError(
           httpStatus.FORBIDDEN,
           "You're not authorized to update/delete this book!"
         );
+      } else if (!book) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'The book is not found!');
       }
     }
 
