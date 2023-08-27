@@ -9,20 +9,6 @@ import { BookFilterableFields } from './book.constant';
 import { paginationFields } from '../../../constants/pagination';
 import ApiError from '../../../errors/ApiError';
 
-// const insertBookToDB = catchAsync(async (req: Request, res: Response) => {
-//   const { ...bookData } = await req.body;
-//   //   console.log('info', 'Body User:', { bookData });
-
-//   const result = await BookService.insertBook(bookData);
-
-//   sendResponse<IBook>(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Book inserted successfully',
-//     data: result,
-//   });
-// });
-
 const insertBookToDB = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -45,8 +31,6 @@ const insertBookToDB = catchAsync(
 const getAllBooksFromDB = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, BookFilterableFields);
   const paginationOptions = pick(req.query, paginationFields);
-
-  // console.log(filters);
 
   const result = await BookService.getAllBooks(filters, paginationOptions);
 
