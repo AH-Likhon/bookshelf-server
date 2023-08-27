@@ -39,7 +39,21 @@ const getAllBooksFromDB = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getSingleBookFromDB = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  const result = await BookService.getSingleBook(id);
+
+  sendResponse<IBook>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Book retrieved successfully',
+    data: result,
+  });
+});
+
 export const BookController = {
   insertBookToDB,
   getAllBooksFromDB,
+  getSingleBookFromDB,
 };

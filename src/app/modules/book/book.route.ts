@@ -13,6 +13,8 @@ router.post(
   BookController.insertBookToDB
 );
 
+router.get('/:id', auth(), BookController.getSingleBookFromDB);
+
 router.get('/', auth(), BookController.getAllBooksFromDB);
 
 export const BookRoutes = router;
