@@ -4,6 +4,7 @@ import { UserValidation } from '../user/user.validation';
 import { UserController } from '../user/user.controller';
 import { AuthValidation } from './auth.validation';
 import { AuthController } from './auth.controller';
+import auth from '../../middlewares/auth';
 
 const router = express.Router();
 
@@ -24,5 +25,6 @@ router.post(
   validateRequest(AuthValidation.refreshTokenZodSchema),
   AuthController.refreshTokenToDB
 );
+router.post('/logout', auth(), AuthController.logOut);
 
 export const AuthRoutes = router;

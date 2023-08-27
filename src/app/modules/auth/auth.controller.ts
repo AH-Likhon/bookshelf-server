@@ -53,7 +53,30 @@ const refreshTokenToDB = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const logOut = catchAsync(async (req: Request, res: Response) => {
+  const refreshToken = await req.cookies.refreshToken;
+
+  const result = await AuthService.logOut(refreshToken);
+
+  // set refresh cookies
+  const cookieOptions = {
+    secure: config.env === 'production',
+    httpOnly: true,
+    expires: new Date(0),
+  };
+
+  res.cookie('refreshToken', '', cookieOptions);
+
+  sendResponse<IRefreshTokenResponse>(res, {
+    statusCode: 200,
+    success: true,
+    message: 'User logOut successfully!',
+    data: result,
+  });
+});
+
 export const AuthController = {
   loginUserToDB,
   refreshTokenToDB,
+  logOut,
 };

@@ -19,10 +19,14 @@ const auth = () => async (req: Request, res: Response, next: NextFunction) => {
     // Verify token
     let verifiedUser = null;
 
-    verifiedUser = jwtHelpers.verifyToken(
-      token,
-      config.jwt.access_secret as Secret
-    );
+    try {
+      verifiedUser = jwtHelpers.verifyToken(
+        token,
+        config.jwt.access_secret as Secret
+      );
+    } catch (error) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Token has expired!');
+    }
 
     req.user = verifiedUser;
 
