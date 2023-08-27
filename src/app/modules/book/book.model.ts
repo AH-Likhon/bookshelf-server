@@ -38,6 +38,11 @@ const BookSchema = new Schema<IBook>(
       type: String,
       required: true,
     },
+    seller: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
     reviews: [ReviewSchema], // Use the ReviewSchema to define the reviews array
   },
   {

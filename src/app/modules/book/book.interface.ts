@@ -1,4 +1,5 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
+import { IUser } from '../user/user.interface';
 
 type IGenre =
   | 'Fiction'
@@ -46,6 +47,7 @@ export type IBook = {
   author: string;
   genre: IGenre;
   publicationDate: string;
+  seller: Types.ObjectId | IUser;
   reviews: IReview[];
 };
 

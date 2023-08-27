@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import catchAsync from '../../../shared/catchAsync';
 import { IBook } from './book.interface';
 import httpStatus from 'http-status';
@@ -7,20 +7,40 @@ import { BookService } from './book.service';
 import pick from '../../../shared/pick';
 import { BookFilterableFields } from './book.constant';
 import { paginationFields } from '../../../constants/pagination';
+import ApiError from '../../../errors/ApiError';
 
-const insertBookToDB = catchAsync(async (req: Request, res: Response) => {
-  const { ...bookData } = await req.body;
-  //   console.log('info', 'Body User:', { bookData });
+// const insertBookToDB = catchAsync(async (req: Request, res: Response) => {
+//   const { ...bookData } = await req.body;
+//   //   console.log('info', 'Body User:', { bookData });
 
-  const result = await BookService.insertBook(bookData);
+//   const result = await BookService.insertBook(bookData);
 
-  sendResponse<IBook>(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Book inserted successfully',
-    data: result,
-  });
-});
+//   sendResponse<IBook>(res, {
+//     statusCode: httpStatus.OK,
+//     success: true,
+//     message: 'Book inserted successfully',
+//     data: result,
+//   });
+// });
+
+const insertBookToDB = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { ...bookData } = await req.body;
+      const result = await BookService.insertBook(bookData);
+
+      sendResponse<IBook>(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Book inserted successfully',
+        data: result,
+      });
+    } catch (error) {
+      const apiError = error as ApiError; // Cast the error to ApiError type
+      next(apiError);
+    }
+  }
+);
 
 const getAllBooksFromDB = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, BookFilterableFields);
@@ -52,8 +72,23 @@ const getSingleBookFromDB = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateBookFromDB = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const updatedData = req.body;
+
+  const result = await BookService.updateBook(id, updatedData);
+
+  sendResponse<IBook>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Book updated successfully',
+    data: result,
+  });
+});
+
 export const BookController = {
   insertBookToDB,
   getAllBooksFromDB,
   getSingleBookFromDB,
+  updateBookFromDB,
 };

@@ -15,6 +15,9 @@ const createBookZodSchema = z.object({
     publicationDate: z.string({
       required_error: 'Publication date is required!',
     }),
+    seller: z.string({
+      required_error: 'Seller is required',
+    }),
     reviews: z.array(
       z.object({
         rating: z.number().int({ message: 'Rating must be an integer' }),

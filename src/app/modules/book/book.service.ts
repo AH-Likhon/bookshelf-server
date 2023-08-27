@@ -5,10 +5,20 @@ import { IPagination } from '../../../interfaces/pagination';
 import { IBook, IBookFilters } from './book.interface';
 import { Book } from './book.model';
 import { BookSearchableFields } from './book.constant';
+import ApiError from '../../../errors/ApiError';
+import httpStatus from 'http-status';
 
 const insertBook = async (book: IBook): Promise<IBook | null> => {
-  const result = await Book.create(book);
-  return result;
+  try {
+    const result = (await Book.create(book)).populate('seller');
+    return result;
+  } catch (error) {
+    if ((error as any).code === 11000) {
+      // Duplicate key error (if title is not unique)
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Title must be unique');
+    }
+    throw error;
+  }
 };
 
 const getAllBooks = async (
@@ -68,7 +78,17 @@ const getAllBooks = async (
 };
 
 const getSingleBook = async (id: string): Promise<IBook | null> => {
-  const result = await Book.findById(id);
+  const result = await Book.findById(id).populate({ path: 'seller' });
+  return result;
+};
+
+const updateBook = async (
+  id: string,
+  payload: Partial<IBook>
+): Promise<IBook | null> => {
+  const result = await Book.findOneAndUpdate({ _id: id }, payload, {
+    new: true,
+  });
   return result;
 };
 
@@ -76,4 +96,5 @@ export const BookService = {
   insertBook,
   getAllBooks,
   getSingleBook,
+  updateBook,
 };

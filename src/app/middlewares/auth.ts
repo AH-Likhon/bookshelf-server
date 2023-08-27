@@ -4,6 +4,7 @@ import { Secret } from 'jsonwebtoken';
 import config from '../../config';
 import ApiError from '../../errors/ApiError';
 import { jwtHelpers } from '../../helpers/jwtHelpers';
+import { User } from '../modules/user/user.model';
 
 const auth = () => async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -23,6 +24,21 @@ const auth = () => async (req: Request, res: Response, next: NextFunction) => {
     );
 
     req.user = verifiedUser;
+
+    // Fetch the user's ID from the database based on their email
+    const user = await User.findOne({ email: verifiedUser.email });
+
+    if (!user) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'User not found');
+    }
+
+    // Check if the logged-in user's ID matches the seller's ID in the request body
+    if (req.body.seller && user._id.toString() !== req.body.seller.toString()) {
+      throw new ApiError(
+        httpStatus.FORBIDDEN,
+        "You're not authorized to perform this action"
+      );
+    }
 
     next();
   } catch (error) {
