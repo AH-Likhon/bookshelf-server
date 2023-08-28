@@ -5,6 +5,7 @@ const zod_1 = require("zod");
 const book_constant_1 = require("./book.constant");
 const createBookZodSchema = zod_1.z.object({
     body: zod_1.z.object({
+        image: zod_1.z.string().optional(),
         title: zod_1.z.string({
             required_error: 'Title is required!',
         }),
@@ -30,6 +31,7 @@ const createBookZodSchema = zod_1.z.object({
 });
 const updateBookZodSchema = zod_1.z.object({
     body: zod_1.z.object({
+        image: zod_1.z.string().optional(),
         title: zod_1.z.string().optional(),
         author: zod_1.z.string().optional(),
         genre: zod_1.z.enum([...book_constant_1.genres]).optional(),

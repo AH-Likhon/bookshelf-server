@@ -34,6 +34,7 @@ const pagination_1 = require("../../../constants/pagination");
 const insertBookToDB = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const bookData = __rest(yield req.body, []);
+        console.log('FileData::', req.files);
         const result = yield book_service_1.BookService.insertBook(bookData);
         (0, responseData_1.default)(res, {
             statusCode: http_status_1.default.OK,
