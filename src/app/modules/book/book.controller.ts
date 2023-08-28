@@ -13,6 +13,8 @@ const insertBookToDB = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { ...bookData } = await req.body;
+
+      console.log('FileData::', req.files);
       const result = await BookService.insertBook(bookData);
 
       sendResponse<IBook>(res, {

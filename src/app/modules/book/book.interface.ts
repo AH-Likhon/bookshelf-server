@@ -43,6 +43,7 @@ export type IReview = {
 };
 
 export type IBook = {
+  image?: string;
   title: string;
   author: string;
   genre: IGenre;

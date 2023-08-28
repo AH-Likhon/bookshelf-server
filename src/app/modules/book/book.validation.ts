@@ -3,6 +3,7 @@ import { genres } from './book.constant';
 
 const createBookZodSchema = z.object({
   body: z.object({
+    image: z.string().optional(),
     title: z.string({
       required_error: 'Title is required!',
     }),
@@ -31,6 +32,7 @@ const createBookZodSchema = z.object({
 
 const updateBookZodSchema = z.object({
   body: z.object({
+    image: z.string().optional(),
     title: z.string().optional(),
     author: z.string().optional(),
     genre: z.enum([...genres] as [string, ...string[]]).optional(),
