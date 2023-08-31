@@ -6,7 +6,25 @@ import httpStatus from 'http-status';
 import routes from './app/routes';
 import cookieParser from 'cookie-parser';
 
-app.use(cors());
+// Allow requests from specific origins
+const allowedOrigins = ['http://localhost:3000']; // Add more origins if needed
+
+const corsOptions = {
+  origin: (
+    origin: string | undefined,
+    callback: (error: Error | null, success?: boolean) => void
+  ) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true, // Allow credentials (cookies)
+};
+
+app.use(cors(corsOptions));
+
 // parser
 app.use(cookieParser());
 app.use(express.json());

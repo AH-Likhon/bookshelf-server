@@ -32,6 +32,8 @@ const getAllBooksFromDB = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, BookFilterableFields);
   const paginationOptions = pick(req.query, paginationFields);
 
+  console.log('Headers Book::', req.cookies);
+
   const result = await BookService.getAllBooks(filters, paginationOptions);
 
   sendResponse<IBook[]>(res, {
