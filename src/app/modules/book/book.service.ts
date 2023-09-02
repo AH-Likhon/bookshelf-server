@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { SortOrder } from 'mongoose';
 import { paginationHelpers } from '../../../helpers/paginationHelpers';
 import { IGenericPagination } from '../../../interfaces/common';
@@ -7,11 +8,46 @@ import { Book } from './book.model';
 import { BookSearchableFields } from './book.constant';
 import ApiError from '../../../errors/ApiError';
 import httpStatus from 'http-status';
+import config from '../../../config';
+import fs from 'fs';
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
+
+import { promisify } from 'util';
+
+const writeFileAsync = promisify(fs.writeFile);
 
 const insertBook = async (book: IBook): Promise<IBook | null> => {
   try {
-    const result = (await Book.create(book)).populate('seller');
-    return result;
+    if (book.image) {
+      // Decode base64 image data
+      const decodedImage = Buffer.from(book.image, 'base64');
+
+      console.log('decodedImage', decodedImage);
+
+      // Generate a unique filename using UUID
+      const filename = `${uuidv4()}.png`;
+
+      // Define the path to save the image
+      const imagePath = path.join(__dirname, '../../../images', filename);
+
+      await writeFileAsync(imagePath, decodedImage); // Use await here
+
+      // Create a URL pointing to the saved image
+      const imageUrl = `http://localhost:${config.port}/images/${filename}`;
+
+      console.log('Coverted Url', imageUrl);
+      book = {
+        ...book,
+        image: imageUrl,
+      };
+
+      const result = (await Book.create(book)).populate('seller');
+      return result;
+    } else {
+      const result = (await Book.create(book)).populate('seller');
+      return result;
+    }
   } catch (error) {
     if ((error as any).code === 11000) {
       // Duplicate key error (if title is not unique)

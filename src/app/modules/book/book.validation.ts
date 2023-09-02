@@ -3,7 +3,10 @@ import { genres } from './book.constant';
 
 const createBookZodSchema = z.object({
   body: z.object({
-    image: z.string().optional(),
+    image: z.string({
+      required_error: 'Image is required!',
+    }),
+    // image: typeof window === 'undefined' ? z.any() : z.instanceof(File),
     title: z.string({
       required_error: 'Title is required!',
     }),
@@ -19,14 +22,17 @@ const createBookZodSchema = z.object({
     seller: z.string({
       required_error: 'Seller is required',
     }),
-    reviews: z.array(
-      z.object({
-        rating: z.number().int({ message: 'Rating must be an integer' }),
-        reviewText: z.string({
-          required_error: 'Review text is required!',
-        }),
-      })
-    ),
+    reviews: z
+      .array(
+        z
+          .object({
+            rating: z.number().optional(),
+            // rating: z.number().int({ message: 'Rating must be an integer' }),
+            reviewText: z.string().optional(),
+          })
+          .optional()
+      )
+      .optional(),
   }),
 });
 

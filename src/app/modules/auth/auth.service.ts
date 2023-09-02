@@ -46,6 +46,7 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   return {
     accessToken,
     refreshToken,
+    user: isUserExist,
   };
 };
 
@@ -81,6 +82,7 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
 
   return {
     accessToken: newAccessToken,
+    user: isUserExist,
   };
 };
 

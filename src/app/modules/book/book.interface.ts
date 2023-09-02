@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Model, Types } from 'mongoose';
 import { IUser } from '../user/user.interface';
 
@@ -49,7 +50,7 @@ export type IBook = {
   genre: IGenre;
   publicationDate: string;
   seller: Types.ObjectId | IUser;
-  reviews: IReview[];
+  reviews?: IReview[];
 };
 
 export type IBookFilters = {

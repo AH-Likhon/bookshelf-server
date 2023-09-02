@@ -5,6 +5,7 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import httpStatus from 'http-status';
 import routes from './app/routes';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 
 // Allow requests from specific origins
 const allowedOrigins = ['http://localhost:3000']; // Add more origins if needed
@@ -26,12 +27,15 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // parser
+// app.use(fileUpload());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // application routes
 app.use('/api/v1', routes);
+
+app.use('/images', express.static(path.join(__dirname, '../src/images')));
 
 app.get('/', async (req: Request, res: Response) => {
   res.send('Hello World is working');

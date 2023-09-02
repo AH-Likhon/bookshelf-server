@@ -13,7 +13,10 @@ const insertBookToDB = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { ...bookData } = await req.body;
+
       const result = await BookService.insertBook(bookData);
+
+      console.log('result::', result);
 
       sendResponse<IBook>(res, {
         statusCode: httpStatus.OK,
@@ -31,8 +34,6 @@ const insertBookToDB = catchAsync(
 const getAllBooksFromDB = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, BookFilterableFields);
   const paginationOptions = pick(req.query, paginationFields);
-
-  console.log('Headers Book::', req.cookies);
 
   const result = await BookService.getAllBooks(filters, paginationOptions);
 
@@ -90,6 +91,7 @@ const deleteBookFromDB = catchAsync(async (req: Request, res: Response) => {
 
 export const BookController = {
   insertBookToDB,
+  // saveBookToDB,
   getAllBooksFromDB,
   getSingleBookFromDB,
   updateBookFromDB,
