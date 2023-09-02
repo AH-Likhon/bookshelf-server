@@ -8,33 +8,14 @@ import { Book } from './book.model';
 import { BookSearchableFields } from './book.constant';
 import ApiError from '../../../errors/ApiError';
 import httpStatus from 'http-status';
-import config from '../../../config';
-import fs from 'fs';
-import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
 
-import { promisify } from 'util';
-
-const writeFileAsync = promisify(fs.writeFile);
+import { isBase64Image, saveBase64Image } from '../../../shared/functions';
 
 const insertBook = async (book: IBook): Promise<IBook | null> => {
   try {
     if (book.image) {
-      // Decode base64 image data
-      const decodedImage = Buffer.from(book.image, 'base64');
-
-      console.log('decodedImage', decodedImage);
-
-      // Generate a unique filename using UUID
-      const filename = `${uuidv4()}.png`;
-
-      // Define the path to save the image
-      const imagePath = path.join(__dirname, '../../../images', filename);
-
-      await writeFileAsync(imagePath, decodedImage); // Use await here
-
       // Create a URL pointing to the saved image
-      const imageUrl = `http://localhost:${config.port}/images/${filename}`;
+      const imageUrl = await saveBase64Image(book.image);
 
       console.log('Coverted Url', imageUrl);
       book = {
@@ -51,7 +32,7 @@ const insertBook = async (book: IBook): Promise<IBook | null> => {
   } catch (error) {
     if ((error as any).code === 11000) {
       // Duplicate key error (if title is not unique)
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Title must be unique');
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Title must be unique❗');
     }
     throw error;
   }
@@ -117,7 +98,7 @@ const getSingleBook = async (id: string): Promise<IBook | null> => {
   const result = await Book.findById(id).populate({ path: 'seller' });
 
   if (!result) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'The book is not found!');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'The book is not found❗');
   }
 
   return result;
@@ -127,11 +108,25 @@ const updateBook = async (
   id: string,
   payload: Partial<IBook>
 ): Promise<IBook | null> => {
-  const result = await Book.findOneAndUpdate({ _id: id }, payload, {
-    new: true,
-  });
+  try {
+    const { image } = payload;
 
-  return result;
+    if (image && isBase64Image(image)) {
+      payload.image = await saveBase64Image(image);
+    }
+
+    const result = await Book.findOneAndUpdate({ _id: id }, payload, {
+      new: true,
+    }).populate('seller');
+
+    return result;
+  } catch (error) {
+    if ((error as any).code === 11000) {
+      // Duplicate key error (if title is not unique)
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Title must be unique❗');
+    }
+    throw error;
+  }
 };
 
 const deleteBook = async (id: string): Promise<IBook | null> => {

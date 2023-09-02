@@ -13,7 +13,7 @@ router.post(
   BookController.insertBookToDB
 );
 
-router.get('/:id', auth(), BookController.getSingleBookFromDB);
+router.get('/:id', BookController.getSingleBookFromDB);
 
 router.patch(
   '/:id',

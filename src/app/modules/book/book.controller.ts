@@ -63,7 +63,6 @@ const updateBookFromDB = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const updatedData = req.body;
 
-  // Remove the seller field from updatedData to prevent it from being updated
   delete updatedData.seller;
 
   const result = await BookService.updateBook(id, updatedData);
