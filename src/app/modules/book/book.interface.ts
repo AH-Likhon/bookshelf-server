@@ -54,6 +54,7 @@ export type IBook = {
 };
 
 export type IBookFilters = {
+  q?: string;
   searchTerm?: string;
   title?: string;
   author?: string;

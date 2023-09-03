@@ -45,15 +45,15 @@ const getAllBooks = async (
   const { limit, page, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePaginations(paginationOptions);
 
-  const { searchTerm, ...filtersData } = filters;
+  const { searchTerm, q, ...filtersData } = filters;
 
   const andConditions = [];
 
-  if (searchTerm) {
+  if (searchTerm || q) {
     andConditions.push({
       $or: BookSearchableFields.map(field => ({
         [field]: {
-          $regex: searchTerm,
+          $regex: searchTerm || q,
           $options: 'i',
         },
       })),
