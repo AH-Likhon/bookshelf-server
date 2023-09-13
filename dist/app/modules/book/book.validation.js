@@ -5,7 +5,10 @@ const zod_1 = require("zod");
 const book_constant_1 = require("./book.constant");
 const createBookZodSchema = zod_1.z.object({
     body: zod_1.z.object({
-        image: zod_1.z.string().optional(),
+        image: zod_1.z.string({
+            required_error: 'Image is required!',
+        }),
+        // image: typeof window === 'undefined' ? z.any() : z.instanceof(File),
         title: zod_1.z.string({
             required_error: 'Title is required!',
         }),
@@ -21,12 +24,16 @@ const createBookZodSchema = zod_1.z.object({
         seller: zod_1.z.string({
             required_error: 'Seller is required',
         }),
-        reviews: zod_1.z.array(zod_1.z.object({
-            rating: zod_1.z.number().int({ message: 'Rating must be an integer' }),
-            reviewText: zod_1.z.string({
-                required_error: 'Review text is required!',
-            }),
-        })),
+        status: zod_1.z.enum([...book_constant_1.status]).optional(),
+        reviews: zod_1.z
+            .array(zod_1.z
+            .object({
+            rating: zod_1.z.number().optional(),
+            // rating: z.number().int({ message: 'Rating must be an integer' }),
+            reviewText: zod_1.z.string().optional(),
+        })
+            .optional())
+            .optional(),
     }),
 });
 const updateBookZodSchema = zod_1.z.object({
@@ -36,6 +43,7 @@ const updateBookZodSchema = zod_1.z.object({
         author: zod_1.z.string().optional(),
         genre: zod_1.z.enum([...book_constant_1.genres]).optional(),
         publicationDate: zod_1.z.string().optional(),
+        status: zod_1.z.enum([...book_constant_1.status]).optional(),
         reviews: zod_1.z
             .array(zod_1.z.object({
             rating: zod_1.z

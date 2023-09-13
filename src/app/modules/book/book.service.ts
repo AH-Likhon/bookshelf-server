@@ -17,15 +17,20 @@ const insertBook = async (book: IBook): Promise<IBook | null> => {
       // Create a URL pointing to the saved image
       const imageUrl = await saveBase64Image(book.image);
 
-      console.log('Coverted Url', imageUrl);
+      // console.log('Coverted Url', imageUrl);
       book = {
         ...book,
         image: imageUrl,
+        status: 'Not Started',
       };
 
       const result = (await Book.create(book)).populate('seller');
       return result;
     } else {
+      book = {
+        ...book,
+        status: 'Not Started',
+      };
       const result = (await Book.create(book)).populate('seller');
       return result;
     }

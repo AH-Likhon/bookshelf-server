@@ -38,6 +38,8 @@ type IGenre =
   | 'Technology'
   | 'Education';
 
+type IStatus = 'Not Started' | 'Reading' | 'Completed';
+
 export type IReview = {
   rating: number;
   reviewText: string;
@@ -50,6 +52,7 @@ export type IBook = {
   genre: IGenre;
   publicationDate: string;
   seller: Types.ObjectId | IUser;
+  status?: IStatus;
   reviews?: IReview[];
 };
 

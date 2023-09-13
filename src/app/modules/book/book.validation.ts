@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { genres } from './book.constant';
+import { genres, status } from './book.constant';
 
 const createBookZodSchema = z.object({
   body: z.object({
@@ -22,6 +22,7 @@ const createBookZodSchema = z.object({
     seller: z.string({
       required_error: 'Seller is required',
     }),
+    status: z.enum([...status] as [string, ...string[]]).optional(),
     reviews: z
       .array(
         z
@@ -43,6 +44,7 @@ const updateBookZodSchema = z.object({
     author: z.string().optional(),
     genre: z.enum([...genres] as [string, ...string[]]).optional(),
     publicationDate: z.string().optional(),
+    status: z.enum([...status] as [string, ...string[]]).optional(),
     reviews: z
       .array(
         z.object({

@@ -36,7 +36,7 @@ const loginUserToDB = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     // set refresh cookies
     const cookieOptions = {
         secure: config_1.default.env === 'production',
-        httpOnly: true,
+        httpOnly: false,
     };
     res.cookie('refreshToken', refreshToken, cookieOptions);
     (0, responseData_1.default)(res, {
@@ -52,7 +52,7 @@ const refreshTokenToDB = (0, catchAsync_1.default)((req, res) => __awaiter(void 
     // set refresh token into cookie
     const cookieOptions = {
         secure: config_1.default.env === 'production',
-        httpOnly: true,
+        httpOnly: false,
     };
     res.cookie('refreshToken', refreshToken, cookieOptions);
     (0, responseData_1.default)(res, {
@@ -63,15 +63,16 @@ const refreshTokenToDB = (0, catchAsync_1.default)((req, res) => __awaiter(void 
     });
 }));
 const logOut = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // const refreshToken = req?.headers?.authorization ?? '';
     const refreshToken = yield req.cookies.refreshToken;
     const result = yield auth_service_1.AuthService.logOut(refreshToken);
     // set refresh cookies
     const cookieOptions = {
         secure: config_1.default.env === 'production',
-        httpOnly: true,
+        httpOnly: false,
         expires: new Date(0),
     };
-    res.cookie('refreshToken', '', cookieOptions);
+    res.cookie('refreshToken', refreshToken, cookieOptions);
     (0, responseData_1.default)(res, {
         statusCode: 200,
         success: true,

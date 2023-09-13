@@ -29,28 +29,40 @@ const book_model_1 = require("./book.model");
 const book_constant_1 = require("./book.constant");
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const http_status_1 = __importDefault(require("http-status"));
+const functions_1 = require("../../../shared/functions");
 const insertBook = (book) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const result = (yield book_model_1.Book.create(book)).populate('seller');
-        return result;
+        if (book.image) {
+            // Create a URL pointing to the saved image
+            const imageUrl = yield (0, functions_1.saveBase64Image)(book.image);
+            // console.log('Coverted Url', imageUrl);
+            book = Object.assign(Object.assign({}, book), { image: imageUrl, status: 'Not Started' });
+            const result = (yield book_model_1.Book.create(book)).populate('seller');
+            return result;
+        }
+        else {
+            book = Object.assign(Object.assign({}, book), { status: 'Not Started' });
+            const result = (yield book_model_1.Book.create(book)).populate('seller');
+            return result;
+        }
     }
     catch (error) {
         if (error.code === 11000) {
             // Duplicate key error (if title is not unique)
-            throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Title must be unique');
+            throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Title must be unique❗');
         }
         throw error;
     }
 });
 const getAllBooks = (filters, paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {
     const { limit, page, skip, sortBy, sortOrder } = paginationHelpers_1.paginationHelpers.calculatePaginations(paginationOptions);
-    const { searchTerm } = filters, filtersData = __rest(filters, ["searchTerm"]);
+    const { searchTerm, q } = filters, filtersData = __rest(filters, ["searchTerm", "q"]);
     const andConditions = [];
-    if (searchTerm) {
+    if (searchTerm || q) {
         andConditions.push({
             $or: book_constant_1.BookSearchableFields.map(field => ({
                 [field]: {
-                    $regex: searchTerm,
+                    $regex: searchTerm || q,
                     $options: 'i',
                 },
             })),
@@ -85,15 +97,28 @@ const getAllBooks = (filters, paginationOptions) => __awaiter(void 0, void 0, vo
 const getSingleBook = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield book_model_1.Book.findById(id).populate({ path: 'seller' });
     if (!result) {
-        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'The book is not found!');
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'The book is not found❗');
     }
     return result;
 });
 const updateBook = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield book_model_1.Book.findOneAndUpdate({ _id: id }, payload, {
-        new: true,
-    });
-    return result;
+    try {
+        const { image } = payload;
+        if (image && (0, functions_1.isBase64Image)(image)) {
+            payload.image = yield (0, functions_1.saveBase64Image)(image);
+        }
+        const result = yield book_model_1.Book.findOneAndUpdate({ _id: id }, payload, {
+            new: true,
+        }).populate('seller');
+        return result;
+    }
+    catch (error) {
+        if (error.code === 11000) {
+            // Duplicate key error (if title is not unique)
+            throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Title must be unique❗');
+        }
+        throw error;
+    }
 });
 const deleteBook = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield book_model_1.Book.findByIdAndDelete(id);

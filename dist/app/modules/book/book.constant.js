@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BookSearchableFields = exports.BookFilterableFields = exports.genres = void 0;
+exports.BookSearchableFields = exports.BookFilterableFields = exports.status = exports.genres = void 0;
 exports.genres = [
     'Fiction',
     'Mystery',
@@ -24,11 +24,14 @@ exports.genres = [
     'Sports',
     'Business',
 ];
+exports.status = ['Not Started', 'Reading', 'Completed'];
 exports.BookFilterableFields = [
     'title',
     'author',
     'genre',
     'publicationDate',
+    'serachTerm',
+    'q',
 ];
 exports.BookSearchableFields = [
     'title',

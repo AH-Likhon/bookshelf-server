@@ -42,6 +42,9 @@ const BookSchema = new mongoose_1.Schema({
         ref: 'User',
         required: true,
     },
+    status: {
+        type: String,
+    },
     reviews: [ReviewSchema], // Use the ReviewSchema to define the reviews array
 }, {
     timestamps: true,

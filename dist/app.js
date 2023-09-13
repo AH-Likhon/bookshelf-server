@@ -19,13 +19,29 @@ const globalErrorHandler_1 = __importDefault(require("./app/middlewares/globalEr
 const http_status_1 = __importDefault(require("http-status"));
 const routes_1 = __importDefault(require("./app/routes"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-app.use((0, cors_1.default)());
+const path_1 = __importDefault(require("path"));
+// Allow requests from specific origins
+const allowedOrigins = ['http://localhost:3000']; // Add more origins if needed
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true, // Allow credentials (cookies)
+};
+app.use((0, cors_1.default)(corsOptions));
 // parser
+// app.use(fileUpload());
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 // application routes
 app.use('/api/v1', routes_1.default);
+app.use('/images', express_1.default.static(path_1.default.join(__dirname, '../src/images')));
 app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send('Hello World is working');
 }));

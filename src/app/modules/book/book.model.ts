@@ -46,6 +46,9 @@ const BookSchema = new Schema<IBook>(
       ref: 'User',
       required: true,
     },
+    status: {
+      type: String,
+    },
     reviews: [ReviewSchema], // Use the ReviewSchema to define the reviews array
   },
   {

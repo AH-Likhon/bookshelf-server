@@ -36,6 +36,7 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     return {
         accessToken,
         refreshToken,
+        user: isUserExist,
     };
 });
 const refreshToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
@@ -57,6 +58,7 @@ const refreshToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
     const newAccessToken = jwtHelpers_1.jwtHelpers.createToken({ email }, config_1.default.jwt.access_secret, config_1.default.jwt.access_expired_in);
     return {
         accessToken: newAccessToken,
+        user: isUserExist,
     };
 });
 const logOut = (token) => __awaiter(void 0, void 0, void 0, function* () {

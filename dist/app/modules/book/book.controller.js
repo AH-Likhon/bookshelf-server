@@ -35,6 +35,7 @@ const insertBookToDB = (0, catchAsync_1.default)((req, res, next) => __awaiter(v
     try {
         const bookData = __rest(yield req.body, []);
         const result = yield book_service_1.BookService.insertBook(bookData);
+        // console.log('result::', result);
         (0, responseData_1.default)(res, {
             statusCode: http_status_1.default.OK,
             success: true,
@@ -72,7 +73,6 @@ const getSingleBookFromDB = (0, catchAsync_1.default)((req, res) => __awaiter(vo
 const updateBookFromDB = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     const updatedData = req.body;
-    // Remove the seller field from updatedData to prevent it from being updated
     delete updatedData.seller;
     const result = yield book_service_1.BookService.updateBook(id, updatedData);
     (0, responseData_1.default)(res, {
@@ -94,6 +94,7 @@ const deleteBookFromDB = (0, catchAsync_1.default)((req, res) => __awaiter(void 
 }));
 exports.BookController = {
     insertBookToDB,
+    // saveBookToDB,
     getAllBooksFromDB,
     getSingleBookFromDB,
     updateBookFromDB,

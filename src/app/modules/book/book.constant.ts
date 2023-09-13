@@ -22,6 +22,8 @@ export const genres = [
   'Business',
 ];
 
+export const status = ['Not Started', 'Reading', 'Completed'];
+
 export const BookFilterableFields = [
   'title',
   'author',

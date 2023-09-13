@@ -16,7 +16,7 @@ const insertBookToDB = catchAsync(
 
       const result = await BookService.insertBook(bookData);
 
-      console.log('result::', result);
+      // console.log('result::', result);
 
       sendResponse<IBook>(res, {
         statusCode: httpStatus.OK,
