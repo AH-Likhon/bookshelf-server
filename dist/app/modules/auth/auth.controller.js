@@ -36,7 +36,7 @@ const loginUserToDB = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     // set refresh cookies
     const cookieOptions = {
         secure: config_1.default.env === 'production',
-        httpOnly: false,
+        httpOnly: true,
     };
     res.cookie('refreshToken', refreshToken, cookieOptions);
     (0, responseData_1.default)(res, {
@@ -52,7 +52,7 @@ const refreshTokenToDB = (0, catchAsync_1.default)((req, res) => __awaiter(void 
     // set refresh token into cookie
     const cookieOptions = {
         secure: config_1.default.env === 'production',
-        httpOnly: false,
+        httpOnly: true,
     };
     res.cookie('refreshToken', refreshToken, cookieOptions);
     (0, responseData_1.default)(res, {
@@ -69,7 +69,7 @@ const logOut = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0,
     // set refresh cookies
     const cookieOptions = {
         secure: config_1.default.env === 'production',
-        httpOnly: false,
+        httpOnly: true,
         expires: new Date(0),
     };
     res.cookie('refreshToken', refreshToken, cookieOptions);

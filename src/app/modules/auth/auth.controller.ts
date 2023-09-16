@@ -16,7 +16,7 @@ const loginUserToDB = catchAsync(async (req: Request, res: Response) => {
   // set refresh cookies
   const cookieOptions = {
     secure: config.env === 'production',
-    httpOnly: false,
+    httpOnly: true,
   };
 
   res.cookie('refreshToken', refreshToken, cookieOptions);
@@ -38,7 +38,7 @@ const refreshTokenToDB = catchAsync(async (req: Request, res: Response) => {
 
   const cookieOptions = {
     secure: config.env === 'production',
-    httpOnly: false,
+    httpOnly: true,
   };
 
   res.cookie('refreshToken', refreshToken, cookieOptions);
@@ -60,7 +60,7 @@ const logOut = catchAsync(async (req: Request, res: Response) => {
   // set refresh cookies
   const cookieOptions = {
     secure: config.env === 'production',
-    httpOnly: false,
+    httpOnly: true,
     expires: new Date(0),
   };
 
