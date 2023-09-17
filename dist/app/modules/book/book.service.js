@@ -29,14 +29,14 @@ const book_model_1 = require("./book.model");
 const book_constant_1 = require("./book.constant");
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const http_status_1 = __importDefault(require("http-status"));
-const functions_1 = require("../../../shared/functions");
+// import { isBase64Image, saveBase64Image } from '../../../shared/functions';
 const insertBook = (book) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (book.image) {
             // Create a URL pointing to the saved image
-            const imageUrl = yield (0, functions_1.saveBase64Image)(book.image);
+            // const imageUrl = await saveBase64Image(book.image);
             // console.log('Coverted Url', imageUrl);
-            book = Object.assign(Object.assign({}, book), { image: imageUrl, status: 'Not Started' });
+            book = Object.assign(Object.assign({}, book), { image: book.image, status: 'Not Started' });
             const result = (yield book_model_1.Book.create(book)).populate('seller');
             return result;
         }
@@ -103,10 +103,10 @@ const getSingleBook = (id) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const updateBook = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { image } = payload;
-        if (image && (0, functions_1.isBase64Image)(image)) {
-            payload.image = yield (0, functions_1.saveBase64Image)(image);
-        }
+        // const { image } = payload;
+        // if (image && isBase64Image(image)) {
+        //   payload.image = await saveBase64Image(image);
+        // }
         const result = yield book_model_1.Book.findOneAndUpdate({ _id: id }, payload, {
             new: true,
         }).populate('seller');

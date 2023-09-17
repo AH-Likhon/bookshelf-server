@@ -9,18 +9,18 @@ import { BookSearchableFields } from './book.constant';
 import ApiError from '../../../errors/ApiError';
 import httpStatus from 'http-status';
 
-import { isBase64Image, saveBase64Image } from '../../../shared/functions';
+// import { isBase64Image, saveBase64Image } from '../../../shared/functions';
 
 const insertBook = async (book: IBook): Promise<IBook | null> => {
   try {
     if (book.image) {
       // Create a URL pointing to the saved image
-      const imageUrl = await saveBase64Image(book.image);
+      // const imageUrl = await saveBase64Image(book.image);
 
       // console.log('Coverted Url', imageUrl);
       book = {
         ...book,
-        image: imageUrl,
+        image: book.image,
         status: 'Not Started',
       };
 
@@ -114,11 +114,11 @@ const updateBook = async (
   payload: Partial<IBook>
 ): Promise<IBook | null> => {
   try {
-    const { image } = payload;
+    // const { image } = payload;
 
-    if (image && isBase64Image(image)) {
-      payload.image = await saveBase64Image(image);
-    }
+    // if (image && isBase64Image(image)) {
+    //   payload.image = await saveBase64Image(image);
+    // }
 
     const result = await Book.findOneAndUpdate({ _id: id }, payload, {
       new: true,

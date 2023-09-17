@@ -8,25 +8,29 @@ import cookieParser from 'cookie-parser';
 import path from 'path';
 
 // Allow requests from specific origins
-// const allowedOrigins = ['http://localhost:3000']; // Add more origins if needed
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://bookshelf-ui.vercel.app',
+];
 
-// const corsOptions = {
-//   origin: (
-//     origin: string | undefined,
-//     callback: (error: Error | null, success?: boolean) => void
-//   ) => {
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-//   credentials: true, // Allow credentials (cookies)
-// };
 const corsOptions = {
-  origin: ['http://localhost:3000'],
+  origin: (
+    origin: string | undefined,
+    callback: (error: Error | null, success?: boolean) => void
+  ) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true, // Allow credentials (cookies)
 };
+// const corsOptions = {
+//   // origin: ['http://localhost:3000',],
+//   origin: ['http://localhost:3000', 'https://bookshelf-ui.vercel.app'],
+//   credentials: true, // Allow credentials (cookies)
+// };
 
 app.use(cors(corsOptions));
 
